@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 def save(main_dict, scheme_dict):
+
     def save_data(data_label, data):
         match data:
             case str() | bool() | int() | float():
