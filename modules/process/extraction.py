@@ -99,18 +99,19 @@ def simple_epoching(data, parameters, info):
     
     return extract
 
-def subset_epoching(data, parameters, info):
+def subset_epoching(data, info, tmin, tmax, ptp_threshold, reject_flat, add_df, labels):
     
     extract = {}
     
+    '''
     #Scrap parameters
     tmin = parameters['TMIN']
     tmax = parameters['TMAX']
     ptp_threshold = parameters['PTP_THRESHOLD']
     reject_flat = parameters['REJECT_FLAT']
-    main_path = '/home/guillaume/Documents/Database/Dataset v4'
     add_df = parameters['ADD_DF']
     labels = parameters['LABELS']
+    '''
     
     events, event_id = mne.events_from_annotations(data)
 
@@ -134,7 +135,7 @@ def subset_epoching(data, parameters, info):
         if add_df == True :
             epochs_extract.metadata = pd.read_csv(f'{main_path}/DATA/{info['rec'].replace('_eeg', '_behav.csv')}', index_col=[0]).reset_index(drop=True)
         # RESET INDEX
-        extract[f'epochs_{label_name}'] = {'no_cleaning':{'no_analysis' : {'data' : epochs_extract}}}
+        extract[f'epochs_{label_name}'] = epochs_extract
     
     return extract
 

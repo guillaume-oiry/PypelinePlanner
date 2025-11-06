@@ -7,7 +7,7 @@ import os
 import sys
 import mne
 
-import _b_event_editing as _b_
+#import _b_event_editing as _b_
 
 
 # Modules
@@ -18,17 +18,15 @@ def EPICE_minimal_preprocessing(file_path, parameters, info):
     low_freq = parameters['LOW_FREQ']
     high_freq = parameters['HIGH_FREQ']
     notch_filter = parameters['NOTCH_FILTER']
-    bad_channels = parameters['BAD_CHANNELS']
+    #bad_channels = parameters['BAD_CHANNELS']
     
     raw = mne.io.read_raw(file_path, preload=True)
     rec = extract_rec(raw)
     raw = rereferencing(raw)
     raw = min_filtering(raw, l_freq = low_freq, h_freq = high_freq, notch_f = notch_filter)
-    raw.info['bads'] = bad_channels[rec]
+    #raw.info['bads'] = bad_channels[rec]
     
-    raw_dict = {rec : {'raw' : {'no_cleaning' : {'no_analysis' : {'data': raw}}}}}
-    
-    return raw_dict
+    return raw
 
 ## Side functions
 

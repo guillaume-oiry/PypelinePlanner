@@ -6,10 +6,18 @@ PARAMETERS = {'preprocessing' : {'sart' : {'CONDITION' : lambda file_path : 'tas
                                             'PARAMETERS' : {'EPICE_minimal_preprocessing' : {'LOW_FREQ' : 0.1,
                                                                                             'HIGH_FREQ' : 40,
                                                                                             'NOTCH_FILTER' : 50}}}},
-              'processing' : {'extraction' : {},
-                              'cleaning' : {},
-                              'analysis' : {},
-                              'plot' : {}},
+              'processing' : {'extraction' : {'all' : {'CONDITIONS' : lambda info : True,
+                                                       'PARAMETERS' : {'subset_epoching' : {'tmin' : -20,
+                                                                                            'tmax' : 0,
+                                                                                            'ptp_threshold' : None,
+                                                                                            'reject_flat' : 1e-6,
+                                                                                            'add_df' : False,
+                                                                                            'labels' : {'probe':'probe'} 
+                                                                                            }
+                                                                       }
+                                                       }
+                                              }
+                              },
               'postprocessing' : {'scheme1' : {'views' : {'func1' : {}},
                                                'statistics' : {'func1' : {},
                                                                'func2' : {}},
@@ -20,17 +28,3 @@ PARAMETERS = {'preprocessing' : {'sart' : {'CONDITION' : lambda file_path : 'tas
                                                }
                                   }
               }
-
-'''
-postprocessing_dict = {'scheme1' : {'floor1-a' : {'data' : data,
-                                                  'statistics' : {'func1' : {},
-                                                                  'func2' : {}},
-                                                  'figures' : {'func1' : {},
-                                                               'func2' : {},
-                                                               'func3' : {}}},
-                                    'floor1-b' : {'data' : data,
-                                                  'statistics' : statistics,
-                                                  'figures' : figures}}}
-'''
-
-

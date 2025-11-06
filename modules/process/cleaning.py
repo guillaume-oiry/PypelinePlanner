@@ -3,7 +3,7 @@
 import mne
 import numpy as np
 
-import _B_Extract as _B_
+#import _B_Extract as _B_
 
 from autoreject import AutoReject
 
@@ -267,33 +267,6 @@ def cleaning_combination(data, parameters, info, original_data):
             clean[key] = {'no_analysis': {'data' : AUTOREJECT_data}}
     
     return clean
-
-
-
-
-'''
-def apply_ASR_and_ptp_threshold_to_epochs(data, parameters, info, original_data):
-    
-    clean = {}
-    
-    data = copy.deepcopy(data)
-    
-    ASR_dict = apply_ASR(data, parameters['apply_ASR'], info, original_data)
-    
-    for ASR_key in ASR_dict.keys():
-        
-        ASR_data = ASR_dict[ASR_key]['no_analysis']['data']
-        PTP_threshold_dict = ptp_threshold_to_epochs(ASR_data, parameters['ptp_threshold_to_epochs'], info, original_data)
-        
-        for PTP_threshold_key in PTP_threshold_dict.keys():
-            PTP_threshold_data = PTP_threshold_dict[PTP_threshold_key]['no_analysis']['data']
-            
-            key = f'{ASR_key}_and_{PTP_threshold_key}'
-            clean[key] = {'no_analysis': {'data' : PTP_threshold_data}}
-    
-    return clean
-'''
-
 
 
 ## Side functions

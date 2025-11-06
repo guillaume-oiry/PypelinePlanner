@@ -22,12 +22,9 @@ location_dict = {'Fp1' : 'Frontal',
 
 # Modules
 
-def PSD_data(data, parameters, info):
+def PSD_data(data, info, bp):
     
     analysis = {}
-    
-    #Scrap parameters
-    bp = parameters['BP'] = True
     
     # Check data type
     if 'Raw' in str(type(data)) :
@@ -50,8 +47,10 @@ def PSD_data(data, parameters, info):
     psd_data = psd.get_data()
 
     analysis[f'PSD'] = {'data': psd_data}
+    '''
     if bp :
         analysis[f'BP'] = {'data': BP_data(psd_data)}
+    '''
 
     return analysis
 
