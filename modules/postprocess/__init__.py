@@ -1,1 +1,1 @@
-__all__ = ["views", "statistics", "figures"]
+__all__ = ["view", "postprocessing_functions"]

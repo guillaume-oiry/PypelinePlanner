@@ -22,17 +22,17 @@ location_dict = {'Fp1' : 'Frontal',
 
 # Modules
 
-def PSD_data(data, info, bp):
+def psd_data(data, info, bp):
     
     analysis = {}
     
-    # Check data type
-    if 'Raw' in str(type(data)) :
+    # check data type
+    if 'raw' in str(type(data)) :
         data_type = 'raw'
-    elif 'Epochs' in str(type(data)) :
+    elif 'epochs' in str(type(data)) :
         data_type = 'epochs'
     else :
-        raise TypeError('Only raws and epochs are allowed.')
+        raise typeerror('only raws and epochs are allowed.')
     
     psd = data.compute_psd(
         method = 'welch',
@@ -46,12 +46,9 @@ def PSD_data(data, info, bp):
     
     psd_data = psd.get_data()
 
-    analysis[f'PSD'] = {'data': psd_data}
-    '''
+    analysis[f'psd'] = psd_data
     if bp :
-        analysis[f'BP'] = {'data': BP_data(psd_data)}
-    '''
-
+        analysis[f'bp'] = bp_data(psd_data)
     return analysis
 
 def Spectrum(data, parameters, info):
