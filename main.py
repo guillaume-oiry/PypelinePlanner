@@ -3,15 +3,18 @@ from parameters import PARAMETERS
 import glob
 import warnings
 import copy
+from multiprocessing import Process
+import time
 
-file_path_list = glob.glob("DATA/*.fif")
 
-def main(file_path_list = file_path_list, parameters = PARAMETERS):
+def main(file_path_list, parameters):
 
     def preprocessing():
+        print("starting preprocessing")
         preprocessing_dict = {}
         preprocessing_options = parameters['preprocessing'].values()
         for file_path in file_path_list:
+            # MP
             option = [opt['PARAMETERS'] for opt in preprocessing_options if opt['CONDITION'](file_path)]
             if len(option) == 0 :
                 warnings.warn(f"No conditions matching for {file_path}")
@@ -29,6 +32,8 @@ def main(file_path_list = file_path_list, parameters = PARAMETERS):
 
     def processing(main_dict, steps = list(parameters['processing'].keys()), nstep = 0, info = {}):
 
+        print("starting processing")
+
         if len(steps) == 0:
             return main_dict
 
@@ -39,6 +44,7 @@ def main(file_path_list = file_path_list, parameters = PARAMETERS):
         step_module = getattr(modules, step)
         processing_step_options = parameters['processing'][step]
         for key in main_dict.keys():
+            # MP
             if nstep == 0:
                 info['file_name'] = key
             else:
@@ -60,11 +66,14 @@ def main(file_path_list = file_path_list, parameters = PARAMETERS):
 
     def postprocessing(processing_dict, parameters):
 
+        print("starting postprocessing")
+
         postprocessing_dict = {}
 
         postprocessing_parameters = parameters['postprocessing']
 
         for function, kwargs in postprocessing_parameters.items():
+            # MP
             postprocessing_function = getattr(modules.postprocessing_functions, function)
             data = postprocessing_function(copy.deepcopy(processing_dict), parameters, **kwargs) # returned data should be a dict with {label : data, [...]}
             postprocessing_dict[function] = data
@@ -125,5 +134,12 @@ def main(file_path_list = file_path_list, parameters = PARAMETERS):
 
 
 if __name__ == "__main__":
-    main()
+    file_path_list = glob.glob("DATA/*.fif")
+    start = time.perf_counter()
+    preprocessing, processing, postprocessing = main(file_path_list = file_path_list, parameters = PARAMETERS)
+    processing_dict = preprocessing()
+    processing(main_dict = processing_dict, steps = list(PARAMETERS['processing'].keys()), nstep = 0, info = {})
+    postprocessing_dict = postprocessing(processing_dict = processing_dict, parameters = PARAMETERS)
+    end = time.perf_counter()
+    print(f"duration : {end-start}")
 

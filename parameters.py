@@ -1,11 +1,16 @@
 PARAMETERS = {'preprocessing' : {'all' : {'CONDITION' : lambda file_path : 'task-sart' in file_path,
                                            'PARAMETERS' : {'EPICE_minimal_preprocessing' : {'LOW_FREQ' : 0.1,
                                                                                             'HIGH_FREQ' : 40,
-                                                                                            'NOTCH_FILTER' : 50}}},
+                                                                                            'NOTCH_FILTER' : 50}
+                                                           }
+                                          },
                                  'other' : {'CONDITION' : lambda file_path : 'task-sart' not in file_path,
                                             'PARAMETERS' : {'EPICE_minimal_preprocessing' : {'LOW_FREQ' : 0.1,
                                                                                             'HIGH_FREQ' : 40,
-                                                                                            'NOTCH_FILTER' : 50}}}}
+                                                                                            'NOTCH_FILTER' : 50}
+                                                            }
+                                            }
+                                 },
               'processing' : {'extraction' : {'all' : {'CONDITIONS' : lambda info : True,
                                                        'PARAMETERS' : {'subset_epoching' : {'tmin' : -20,
                                                                                             'tmax' : 0,
@@ -22,7 +27,7 @@ PARAMETERS = {'preprocessing' : {'all' : {'CONDITION' : lambda file_path : 'task
                                                                         }
                                                         }
                                             }
-                              }
+                              },
               'postprocessing' : {'psd_mean' : {}
                                   }
               }

@@ -4,6 +4,7 @@ def view(main_dict, view_parameters, parameters):
 
     # 1 - Create the tree of the view dictionnary
     view = create_tree(view_parameters)
+    print(f"NEW TREE : {view}")
 
 
     # 2 - Fill the tree of the view dictionnary according to conditions
