@@ -3,18 +3,28 @@ from parameters import PARAMETERS
 import glob
 import warnings
 import copy
-from multiprocessing import Process
+import multiprocessing
 import time
 
 
-def main(file_path_list, parameters):
+def main(file_path_list, parameters, mp = True):
 
-    def preprocessing():
+    def preprocessing(mp):
+
         print("starting preprocessing")
+
+        if mp:
+            q = multiprocessing.Queue()
+            mp_list = []
+            def mp_preprocess(q, preprocessing_function, file_path, parameters, info):
+                data = preprocessing_function(file_path, parameters = kwargs, info=file_path)
+                q.put((file_path, data))
+
         preprocessing_dict = {}
         preprocessing_options = parameters['preprocessing'].values()
+
         for file_path in file_path_list:
-            # MP
+
             option = [opt['PARAMETERS'] for opt in preprocessing_options if opt['CONDITION'](file_path)]
             if len(option) == 0 :
                 warnings.warn(f"No conditions matching for {file_path}")
@@ -22,15 +32,33 @@ def main(file_path_list, parameters):
                 raise Exception(f"Conditions should be mutually exclusive. {len(option)} conditions matched for {file_path}")
             else :
                 option = option[0]
-            function = list(option.keys())[0]
+            function = list(option.keys())[0] # so only one preprocessing function by file
             # need error handling here ?
             kwargs = option[function]
             preprocessing_function = getattr(modules.preprocess, function)
-            raw = preprocessing_function(file_path, parameters = kwargs, info=file_path)
-            preprocessing_dict[file_path[5:]] = nest_data(list(parameters['processing'].keys()), raw) #not pretty the removal of 'DATA'
+
+            if mp:
+                process = multiprocessing.Process(target=mp_preprocess, args=(q, preprocessing_function, file_path, kwargs, file_path))
+                process.start()
+                mp_list.append(process)
+            else:
+                data = preprocessing_function(file_path, parameters = kwargs, info=file_path)
+                preprocessing_dict[file_path] = nest_data(list(parameters['processing'].keys()), data)
+
+        if mp:
+
+            for _ in mp_list:
+                file_path, data = q.get()
+                preprocessing_dict[file_path] = nest_data(list(parameters["processing"].keys()), data)
+
+            for p in mp_list:
+                p.join()
+
+        print(f"DICT : {preprocessing_dict}")
+
         return preprocessing_dict
 
-    def processing(main_dict, steps = list(parameters['processing'].keys()), nstep = 0, info = {}):
+    def processing(main_dict, steps = list(parameters['processing'].keys()), nstep = 0, info = {}, mp):
 
         print("starting processing")
 
@@ -64,7 +92,7 @@ def main(file_path_list, parameters):
                     main_dict[key].update({label : nest_data(steps = steps[nstep+1:], data = data)})
             processing(main_dict[key], steps, nstep = nstep+1, info = info)
 
-    def postprocessing(processing_dict, parameters):
+    def postprocessing(processing_dict, parameters, mp):
 
         print("starting postprocessing")
 
@@ -81,6 +109,10 @@ def main(file_path_list, parameters):
         return postprocessing_dict
 
         '''
+
+        # DRAFT OF ANOTHER APPROACH TO POSTPROCESSING
+
+
         def postprocessing_scheme(processing_dict, scheme_dict, scheme_steps, scheme_parameters, processing_steps = processing_steps):
 
             if len(scheme_steps) == 0:
@@ -134,12 +166,13 @@ def main(file_path_list, parameters):
 
 
 if __name__ == "__main__":
+    #multiprocessing.set_start_method('spawn')
     file_path_list = glob.glob("DATA/*.fif")
     start = time.perf_counter()
-    preprocessing, processing, postprocessing = main(file_path_list = file_path_list, parameters = PARAMETERS)
+    preprocessing, processing, postprocessing = main(file_path_list = file_path_list, parameters = PARAMETERS, mp = True)
     processing_dict = preprocessing()
-    processing(main_dict = processing_dict, steps = list(PARAMETERS['processing'].keys()), nstep = 0, info = {})
-    postprocessing_dict = postprocessing(processing_dict = processing_dict, parameters = PARAMETERS)
+    #processing(main_dict = processing_dict, steps = list(PARAMETERS['processing'].keys()), nstep = 0, info = {})
+    #postprocessing_dict = postprocessing(processing_dict = processing_dict, parameters = PARAMETERS)
     end = time.perf_counter()
     print(f"duration : {end-start}")
 
