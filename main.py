@@ -67,28 +67,88 @@ def main(file_path_list, parameters):
         if nstep >= len(steps):
             return main_dict
 
-        step = steps[nstep]
-        step_module = getattr(modules, step)
-        processing_step_options = parameters['processing'][step]
-        for key in main_dict.keys():
-            if nstep == 0:
-                info['file_name'] = key
-            else:
-                info[steps[nstep-1]] = key
-            option = [opt['PARAMETERS'] for opt in processing_step_options.values() if opt['CONDITIONS'](info)]
-            if len(option) == 0 :
-                warnings.warn(f"No conditions matching for {key}")
-                continue
-            elif len(option) > 1 :
-                raise Exception(f"Conditions should be mutually exclusive. {len(option)} conditions matched for {key}")
-            else :
-                option = option[0]
-            for function, kwargs in option.items():
-                step_function = getattr(step_module, function)
-                datas = step_function(unnest_data(main_dict[key]), info, **kwargs) # returned data should be a dict with {label : data, [...]}
-                for label, data in datas.items():
-                    main_dict[key].update({label : nest_data(steps = steps[nstep+1:], data = data)})
-            processing(main_dict[key], steps, nstep = nstep+1, info = info)
+        if mp is False:
+            step = steps[nstep]
+            step_module = getattr(modules, step)
+            processing_step_options = parameters['processing'][step]
+            for key in main_dict.keys():
+                if nstep == 0:
+                    info['file_name'] = key
+                else:
+                    info[steps[nstep-1]] = key
+                option = [opt['PARAMETERS'] for opt in processing_step_options.values() if opt['CONDITIONS'](info)]
+                if len(option) == 0 :
+                    warnings.warn(f"No conditions matching for {key}")
+                    continue
+                elif len(option) > 1 :
+                    raise Exception(f"Conditions should be mutually exclusive. {len(option)} conditions matched for {key}")
+                else :
+                    option = option[0]
+                for function, kwargs in option.items():
+                    step_function = getattr(step_module, function)
+                    datas = step_function(unnest_data(main_dict[key]), info, **kwargs) # returned data should be a dict with {label : data, [...]}
+                    for label, data in datas.items():
+                        main_dict[key].update({label : nest_data(steps = steps[nstep+1:], data = data)})
+                processing(main_dict[key], steps, nstep = nstep+1, info = info, mp = False)
+            return main_dict
+
+        if mp is True:
+
+            def rec_processing(ind_dict, steps = list(parameters['processing'].keys()), nstep = 0, info = {}):
+
+                if len(steps) == 0:
+                    return ind_dict
+
+                if nstep >= len(steps):
+                    return ind_dict
+
+                step = steps[nstep]
+                step_module = getattr(modules, step)
+                processing_step_options = parameters['processing'][step]
+                for key in ind_dict.keys():
+                    if nstep == 0:
+                        info['file_name'] = key
+                    else:
+                        info[steps[nstep-1]] = key
+                    option = [opt['PARAMETERS'] for opt in processing_step_options.values() if opt['CONDITIONS'](info)]
+                    if len(option) == 0 :
+                        warnings.warn(f"No conditions matching for {key}")
+                        continue
+                    elif len(option) > 1 :
+                        raise Exception(f"Conditions should be mutually exclusive. {len(option)} conditions matched for {key}")
+                    else :
+                        option = option[0]
+                    for function, kwargs in option.items():
+                        step_function = getattr(step_module, function)
+                        datas = step_function(unnest_data(ind_dict[key]), info, **kwargs) # returned data should be a dict with {label : data, [...]}
+                        for label, data in datas.items():
+                            ind_dict[key].update({label : nest_data(steps = steps[nstep+1:], data = data)})
+                    rec_processing(ind_dict[key], steps, nstep = nstep+1, info = info)
+                return ind_dict
+
+            q = multiprocessing.Queue()
+            mp_list = []
+
+            def mp_process(q, file_path, ind, parameters):
+                ind_dict = rec_processing(ind_dict = {file_path : ind}, steps = list(parameters['processing'].keys()), nstep = 0, info = {})
+                q.put(ind_dict)
+
+            for file_path, ind in main_dict.items():
+                process = multiprocessing.Process(target=mp_process, args=(q, file_path, ind, parameters))
+                process.start()
+                mp_list.append(process)
+
+            processing_dict = {}
+            for _ in mp_list:
+                data = q.get()
+                for key, value in data.items():
+                    processing_dict[key] = value
+
+            for p in mp_list:
+                p.join()
+                #p.close()
+
+            return processing_dict
 
     def postprocessing(processing_dict, parameters, mp = True):
 
@@ -196,7 +256,7 @@ if __name__ == "__main__":
 
     stats = []
 
-    for mp in [True, False]:
+    for mp in [False, True]:
         start_global = time.perf_counter()
 
         start_preprocessing = time.perf_counter()
@@ -205,7 +265,8 @@ if __name__ == "__main__":
         duration_preprocessing = end_preprocessing - start_preprocessing
 
         start_processing = time.perf_counter()
-        processing(main_dict = processing_dict, steps = list(PARAMETERS['processing'].keys()), nstep = 0, info = {}, mp = mp)
+        processing_dict = processing(main_dict = processing_dict, steps = list(PARAMETERS['processing'].keys()), nstep = 0, info = {}, mp = mp)
+        print(processing_dict)
         end_processing = time.perf_counter()
         duration_processing = end_processing - start_processing
 
