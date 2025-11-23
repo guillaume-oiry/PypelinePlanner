@@ -1,1 +1,1 @@
-__all__ = ["extraction", "cleaning", "analysis", "plot"]
+__all__ = ["extraction", "analysis"]

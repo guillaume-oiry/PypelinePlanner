@@ -1,1 +1,1 @@
-__all__ = ["view", "postprocessing_functions"]
+__all__ = ["postprocess"]

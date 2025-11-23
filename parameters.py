@@ -1,56 +1,48 @@
-DATA_QUERY = "DATA/*.fif"
+import glob
+
+PATH_LIST = glob.glob("DATA/ds004577/sub-*/ses-*/eeg/*.edf")
+PATH_LIST.append("DATA/ds004577/participants.tsv")
 
 preprocessing_parameters = {
-    "all": {
-        "CONDITION": lambda file_path: "task-sart" in file_path,
-        "PARAMETERS": {
-            "EPICE_minimal_preprocessing": {
-                "LOW_FREQ": 0.1,
-                "HIGH_FREQ": 40,
-                "NOTCH_FILTER": 50,
-            }
+    "eeg": {
+        "CONDITION": lambda path: ".edf" in path,
+        "FUNCTIONS": {
+            "EEG_minimal_filtering": {"l_freq": 0.1, "h_freq": 40, "notch_f": 60}
         },
     },
-    "other": {
-        "CONDITION": lambda file_path: "task-sart" not in file_path,
-        "PARAMETERS": {
-            "EPICE_minimal_preprocessing": {
-                "LOW_FREQ": 0.1,
-                "HIGH_FREQ": 40,
-                "NOTCH_FILTER": 50,
-            }
-        },
+    "participants": {
+        "CONDITION": lambda path: "participants.tsv" in path,
+        "FUNCTIONS": {"load_tsv": {}},
     },
 }
 
 processing_parameters = {
     "extraction": {
-        "all": {
-            "CONDITION": lambda info: True,
-            "PARAMETERS": {
-                "subset_epoching": {
-                    "tmin": -20,
-                    "tmax": 0,
-                    "ptp_threshold": None,
-                    "reject_flat": 1e-6,
-                    "add_df": False,
-                    "labels": {"probe": "probe"},
-                }
-            },
+        "eeg": {
+            "CONDITION": lambda info: ".edf" in info["file_name"],
+            "FUNCTIONS": {"raw_eeg_to_fixed_length_epochs": {"duration": 20}},
         }
     },
     "analysis": {
+        "raw": {
+            "CONDITION": lambda info: ("no_extraction" in info["extraction"])
+            and (".edf" in info["file_name"]),
+            "FUNCTIONS": {
+                "PSD": {"plot": False},
+                "spectrogram": {"channel": "FZ", "win_sec": 10},
+            },
+        },
         "epochs": {
             "CONDITION": lambda info: "epochs" in info["extraction"],
-            "PARAMETERS": {"psd_data": {"bp": False}},
-        }
+            "FUNCTIONS": {"PSD": {"plot": False}},
+        },
     },
 }
 
-postprocesssing_parameters = {"psd_mean": {}, "psd_mean": {}, "psd_mean": {}}
+postprocessing_parameters = {"psd_mean": {"plot_freqs_interval": [0, 50]}}
 
 PARAMETERS = {
     "preprocessing": preprocessing_parameters,
     "processing": processing_parameters,
-    "postprocessing": postprocesssing_parameters,
+    "postprocessing": postprocessing_parameters,
 }
