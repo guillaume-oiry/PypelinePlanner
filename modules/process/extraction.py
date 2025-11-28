@@ -1,4 +1,5 @@
 import mne
+from . import cpp_process
 
 
 def raw_eeg_to_fixed_length_epochs(data, info, duration=30):

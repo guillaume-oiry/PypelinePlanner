@@ -7,3 +7,4 @@ DATA
 .ipynb_checkpoints/
 /DATA/
 /RESULTS/
+*.so

@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import yasa
+from . import cpp_process
 
 
 def PSD(data, info, plot=True):

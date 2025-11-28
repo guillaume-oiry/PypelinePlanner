@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import mne
+from . import cpp_postprocess
 
 
 def psd_mean(processing_dict, parameters, plot_freqs_interval=[0, 40]):
