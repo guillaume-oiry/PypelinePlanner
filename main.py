@@ -210,7 +210,9 @@ def rec_processing(individual_dict, parameters, steps, nstep=0, info={}):
 def postprocessing(processing_dict, parameters):
 
     postprocessing_dict = {}
-    postprocessing_parameters = parameters["postprocessing"]
+
+    if not 'postprocessing' in parameters.keys():
+        return {}
 
     functions = get_functions_with_args(
         info=None,
@@ -230,7 +232,9 @@ def postprocessing(processing_dict, parameters):
 def postprocessing_mp(processing_dict, parameters):
 
     postprocessing_dict = {}
-    postprocessing_parameters = parameters["postprocessing"]
+
+    if not 'postprocessing' in parameters.keys():
+        return {}
 
     functions = get_functions_with_args(
         info=None,
@@ -331,5 +335,9 @@ if __name__ == "__main__":
         apply_multiprocessing=False,
     )
     end = time.perf_counter()
+
+    print(f"PREPROCESSING DICT : {preprocessing_dict}")
+    print(f"PROCESSING DICT : {processing_dict}")
+    print(f"POSTPROCESSING DICT : {postprocessing_dict}")
 
     print(f"duration : {end-start}")

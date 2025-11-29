@@ -3,8 +3,9 @@ __pycache__/
 todo.txt
 Session.vim
 todo.txt
-DATA
+/DATA/
 .ipynb_checkpoints/
 /DATA/
 /RESULTS/
 *.so
+/tests/fake_edf_generator.py

@@ -18,7 +18,7 @@ NOTE : The multiprocessing feature is still a work-in-progress but it works to s
 
 ## Features
 
-### Pipeline planning
+### Python pipeline planning
 
 [Check the jupyter notebook tutorial.]
 
