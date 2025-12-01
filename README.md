@@ -20,7 +20,7 @@ NOTE : The multiprocessing feature is still a work-in-progress but it works to s
 
 ### Python pipeline planning
 
-[Check the jupyter notebook tutorial.]
+For a detailed overview check the jupyter notebook tutorial !
 
 
 ### C++ integration
