@@ -54,7 +54,7 @@ c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) <step>.
 For example from the modules/preprocess/ directory:
 
 ```
-c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) preprocess.cpp -o cpp_prepocess$(python3 -m pybind11 --extension-suffix)
+c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) preprocess.cpp -o cpp_preprocess$(python3 -m pybind11 --extension-suffix)
 ```
 
 This will generates a .so file that can be imported in the preprocess python file with `from . import cpp_preproces` and access the various functions inside like any library : `data = cpp_preprocess.filter(...)`
