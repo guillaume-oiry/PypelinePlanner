@@ -1,0 +1,11 @@
+__pycache__/
+/venv/
+todo.txt
+Session.vim
+todo.txt
+/DATA/
+.ipynb_checkpoints/
+/DATA/
+/RESULTS/
+*.so
+/tests/fake_edf_generator.py
