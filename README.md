@@ -23,6 +23,17 @@ NOTE : The multiprocessing feature is still a work-in-progress but it works to s
 For a detailed overview check the jupyter notebook tutorial !
 
 
+### Docker image
+
+```
+docker pull guillaumeoiry/pypelineplanner:latest
+docker build . -t guillaumeoiry/pypelineplanner:latest
+docker run -p 9999:8888 -v {DATA DIRECTORY PATH}:/app/DATA/ guillaumeoiry/pypelineplanner:latest
+```
+
+Then go to localhost:9999 and enter the given token to access jupyter.
+
+
 ### C++ integration
 
 If you want to optimize your code with c++, there is already cpp files for each step of the pipeline ready to compile and integrate with their respective python submodules.
