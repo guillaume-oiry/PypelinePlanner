@@ -26,8 +26,6 @@ For a detailed overview check the jupyter notebook tutorial !
 ### Docker image
 
 ```
-docker pull guillaumeoiry/pypelineplanner:latest
-docker build . -t guillaumeoiry/pypelineplanner:latest
 docker run -p 9999:8888 -v {DATA DIRECTORY PATH}:/app/DATA/ guillaumeoiry/pypelineplanner:latest
 ```
 
