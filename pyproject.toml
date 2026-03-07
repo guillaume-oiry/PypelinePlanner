@@ -103,6 +103,7 @@ dependencies = [
     "notebook-shim==0.2.4",
     "numba==0.62.1",
     "numpy==2.3.5",
+    "openneuro-py>=2026.3.0",
     "packaging==25.0",
     "pandas==2.2.3",
     "pandocfilters==1.5.1",
