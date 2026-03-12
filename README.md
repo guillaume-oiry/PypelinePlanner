@@ -28,6 +28,22 @@ docker run -p 8888:8888 guillaumeoiry/pypelineplanner:latest
 ```
 
 
+
+### ArangoDB integration
+
+An alternate version of the docker image is set-up to implement an arango database. It includes a custom script to fetch an openneuro dataset into a local arango database (with optional metadata renaming and type conversion) to give more control in the download of openneuro datasets.
+
+You can run the demo from those lines :
+
+```
+docker network create pipeline
+docker run -d --name arangodb-instance --network pipeline -p 8529:8529 -e ARANGO_NO_AUTH=1 arangodb
+docker run --name pypelineplanner-arangodb --network pipeline -p 8888:8888 guillaumeoiry/pypelineplanner-arangodb:latest
+```
+
+It runs a jupyter session accessible from the token in the logs. The demo is at the start the tutorial.ipynb notebook.
+
+
 ### C++ integration
 
 If you want to optimize your code with c++, there is already cpp files for each step of the pipeline ready to compile and integrate with their respective python submodules.
