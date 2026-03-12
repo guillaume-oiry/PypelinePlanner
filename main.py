@@ -14,7 +14,7 @@ def main(path_list, parameters, apply_multiprocessing=False):
     if apply_multiprocessing:
         preprocessing_dict = preprocessing_mp(path_list, parameters)
         processing_dict = processing_mp(preprocessing_dict, parameters)
-        postprocessing_dict = postprocessing(processing_dict, parameters)
+        postprocessing_dict = postprocessing_mp(processing_dict, parameters)
     else:
         preprocessing_dict = preprocessing(path_list, parameters)
         processing_dict = processing(preprocessing_dict, parameters)

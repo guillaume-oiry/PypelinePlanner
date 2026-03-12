@@ -2043,6 +2043,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pyjwt"
+version = "2.11.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5c/5a/b46fa56bf322901eee5b0454a34343cdbdae202cd421775a8ee4e42fd519/pyjwt-2.11.0.tar.gz", hash = "sha256:35f95c1f0fbe5d5ba6e43f00271c275f7a1a4db1dab27bf708073b75318ea623", size = 98019, upload-time = "2026-01-30T19:59:55.694Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6f/01/c26ce75ba460d5cd503da9e13b21a33804d38c2165dec7b716d06b13010c/pyjwt-2.11.0-py3-none-any.whl", hash = "sha256:94a6bde30eb5c8e04fee991062b534071fd1439ef58d2adc9ccb823e7bcd0469", size = 28224, upload-time = "2026-01-30T19:59:54.539Z" },
+]
+
+[[package]]
 name = "pymatreader"
 version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2193,6 +2202,7 @@ dependencies = [
     { name = "pymatreader" },
     { name = "pyparsing" },
     { name = "pyriemann" },
+    { name = "python-arango" },
     { name = "python-dateutil" },
     { name = "python-gitlab" },
     { name = "python-json-logger" },
@@ -2364,6 +2374,7 @@ requires-dist = [
     { name = "pymatreader", specifier = "==1.1.0" },
     { name = "pyparsing", specifier = "==3.2.5" },
     { name = "pyriemann", specifier = "==0.9" },
+    { name = "python-arango", specifier = ">=8.3.0" },
     { name = "python-dateutil", specifier = "==2.9.0.post0" },
     { name = "python-gitlab", specifier = "==7.0.0" },
     { name = "python-json-logger", specifier = "==4.0.0" },
@@ -2425,6 +2436,22 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/37/a5/4ad28dd76cb4ba606f3c13391fe872ed9510fd1efc6fd3937842e724a6e9/pyriemann-0.9.tar.gz", hash = "sha256:947c52f5f60ffc7bcb7dee5b840d301b80ce7eedb5ed054100e482b295599803", size = 142668, upload-time = "2025-07-23T06:26:50.987Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8a/10/68024eaf057483e0e21aa16d70ffc1d984adc04b8a7b6e5399cea56d4a51/pyriemann-0.9-py2.py3-none-any.whl", hash = "sha256:956f38f8f712b76557fbfad092fb22e2350bb58920387df7bc9e6e01420c416e", size = 127671, upload-time = "2025-07-23T06:26:49.802Z" },
+]
+
+[[package]]
+name = "python-arango"
+version = "8.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+    { name = "pyjwt" },
+    { name = "requests" },
+    { name = "requests-toolbelt" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/19/2b/2849beef8f9d2a57fa6305033dd91cb52628eb3e3f7d825b02812e207b00/python_arango-8.3.0.tar.gz", hash = "sha256:3b89268f50c816aabc7b2651cdb2b980919cc547490f5d37a3124f8fccfc08be", size = 154720, upload-time = "2026-02-11T02:27:37.8Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ca/c8/0eadc927b2e281dfdce1348ddffdc177dc75b7ba2f024dd9dae96522de3d/python_arango-8.3.0-py3-none-any.whl", hash = "sha256:4c8bb1d859a39152dd69a7ee03c6702cdcb62f0bb19060d4ffa219a9b425b526", size = 116189, upload-time = "2026-02-11T02:27:36.606Z" },
 ]
 
 [[package]]
