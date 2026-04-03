@@ -127,6 +127,7 @@ dependencies = [
     "pymatreader==1.1.0",
     "pyparsing==3.2.5",
     "pyriemann==0.9",
+    "python-arango>=8.3.0",
     "python-dateutil==2.9.0.post0",
     "python-gitlab==7.0.0",
     "python-json-logger==4.0.0",

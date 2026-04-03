@@ -2,7 +2,7 @@ FROM python:3.13-slim
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
         build-essential && \
-        apt-get install -y wget && \
+        apt-get install -y wget git && \
         apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ADD https://astral.sh/uv/install.sh /install.sh
